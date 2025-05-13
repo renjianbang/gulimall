@@ -1,0 +1,28 @@
+mybatis-plus:
+  configuration: #sql日志
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  mapper-locations:
+    - classpath:com/xunqi/gulimall/paymentdemo/mapper/xml/*.xml
+    - classpath*:/com/xunqi/gulimall/**/*.xml
+    # 新增以下路径配置
+    - classpath*:/mybatis/mapper/**/*.xml
+
+spring:
+  application:
+    name: gulimall-product
+  datasource:
+    username: root
+    password: root
+    url: jdbc:mysql://127.0.0.1:3306/gulimall?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  redis:
+    password: 123456
+    port: 6379
+    host: 127.0.0.1
+## 日志等级
+logging:
+  level:
+    com.xunqi.gulimall.dao: info
+    com.baomidou.mybatisplus: info
+server:
+  port: 8888
