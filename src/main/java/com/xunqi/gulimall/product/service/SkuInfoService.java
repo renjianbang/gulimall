@@ -3,6 +3,7 @@ package com.xunqi.gulimall.product.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import com.xunqi.gulimall.product.entity.SkuInfoEntity;
+import com.xunqi.gulimall.product.vo.DetailVo;
 import com.xunqi.gulimall.product.vo.SkuItemVo;
 
 
@@ -24,6 +25,6 @@ public interface SkuInfoService extends IService<SkuInfoEntity> {
      * @param skuId
      * @return
      */
-    SkuItemVo item(Long skuId) throws ExecutionException, InterruptedException;
+    /*SkuItemVo*/DetailVo item(Long skuId) throws ExecutionException, InterruptedException;
 }
 

@@ -227,7 +227,7 @@ public class CartServiceImpl implements CartService {
         //查询购物车里面的商品
         CartItemVo cartItem = getCartItem(skuId);
         //修改商品状态
-        cartItem.setChecked(check == 1?true:false);
+        cartItem.setChecked(check == 1 ? true : false);
 
         //序列化存入redis中
         String redisValue = JSON.toJSONString(cartItem);

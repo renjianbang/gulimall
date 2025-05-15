@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 
 import com.xunqi.gulimall.product.entity.SkuImagesEntity;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -17,5 +18,6 @@ import java.util.Map;
 public interface SkuImagesService extends IService<SkuImagesEntity> {
 
 
+    List<SkuImagesEntity> getImagesBySkuId(Long skuId);
 }
 

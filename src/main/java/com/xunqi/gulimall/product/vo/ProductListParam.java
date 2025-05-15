@@ -36,11 +36,11 @@ public class ProductListParam {
     private String category1Id;
     private String category2Id;
     private String category3Id;
-    private String categoryName;
-    private String keyword;
+    private String categoryName;//分类的面包屑
+    private String keyword;     //关键字的面包屑
     private String order;
     private Integer pageNo;
     private Integer pageSize;
-    private List<String> props;
-    private String trademark;
+    private List<String> props; //平台的售卖的属性值展示
+    private String trademark;   //品牌的面包屑
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -152,9 +153,9 @@ public class CartController {
      * @param checked
      * @return
      */
-    @GetMapping(value = "/checkCart/{skuId}/{checked}")
+    @GetMapping(value = "/checkCart/{skuId}/{isChecked}")
     public R checkItem(@PathVariable("skuId") Long skuId,
-                            @PathVariable("checked") Integer checked) {
+                            @PathVariable("isChecked") Integer checked) {
 
         cartService.checkItem(skuId, checked);
 
@@ -190,6 +191,18 @@ public class CartController {
         cartService.deleteIdCartInfo(skuId);
 
         return "redirect:http://cart.gulimall.com/cart.html";
+
+    }
+
+    /**
+     * 删除商品信息
+     * @param skuId
+     * @return
+     */
+    @DeleteMapping(value = "/deleteCart/{skuId}")
+    public R deleteCart(@PathVariable("skuId") Integer skuId) {
+        cartService.deleteIdCartInfo(skuId);
+        return R.ok();
 
     }
 

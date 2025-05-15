@@ -2,7 +2,10 @@ package com.xunqi.gulimall.product.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.xunqi.gulimall.product.entity.BrandEntity;
+import com.xunqi.gulimall.product.vo.ProductListParam;
+import com.xunqi.gulimall.product.vo.ProductListchilrenVo.Trademark;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -14,5 +17,6 @@ import java.util.Map;
  */
 public interface BrandService extends IService<BrandEntity> {
 
+    List<Trademark> brandListByParam(ProductListParam param);
 }
 

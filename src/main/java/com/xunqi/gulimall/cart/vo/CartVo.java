@@ -20,7 +20,7 @@ public class CartVo {
     /**
      * 购物车子项信息
      */
-    List<CartItemVo> cartInfoList;
+     List<CartItemVo> cartInfoList;
 
 //    /**
 //     * 商品数量

@@ -17,5 +17,10 @@ import java.util.Map;
 public class SkuImagesServiceImpl extends ServiceImpl<SkuImagesDao, SkuImagesEntity> implements SkuImagesService {
 
 
-
+    @Override
+    public List<SkuImagesEntity> getImagesBySkuId(Long skuId) {
+        QueryWrapper<SkuImagesEntity> wrapper = new QueryWrapper<>();
+        wrapper.eq("sku_id", skuId);
+        return baseMapper.selectList(wrapper);
+    }
 }

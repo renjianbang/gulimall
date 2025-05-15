@@ -3,6 +3,7 @@ package com.xunqi.gulimall.product.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import com.xunqi.gulimall.product.entity.SkuSaleAttrValueEntity;
+import com.xunqi.gulimall.product.vo.DetailSpuSaleAttrVo;
 import com.xunqi.gulimall.product.vo.SkuItemSaleAttrVo;
 
 
@@ -23,5 +24,7 @@ public interface SkuSaleAttrValueService extends IService<SkuSaleAttrValueEntity
 
     List<String> getSkuSaleAttrValuesAsStringList(Long skuId);
 
+
+    List<DetailSpuSaleAttrVo> getSaleAttrsBySpuId(Long spuId);
 }
 

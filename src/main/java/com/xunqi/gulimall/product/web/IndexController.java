@@ -4,6 +4,7 @@ import com.xunqi.gulimall.product.entity.CategoryEntity;
 import com.xunqi.gulimall.product.service.CategoryService;
 import com.xunqi.gulimall.product.service.MallSearchService;
 import com.xunqi.gulimall.product.service.SkuInfoService;
+import com.xunqi.gulimall.product.vo.DetailVo;
 import com.xunqi.gulimall.utils.product.R;
 
 import com.xunqi.gulimall.product.vo.ProductListParam;
@@ -59,6 +60,9 @@ public class IndexController {
 
     @PostMapping("/list")
     public R list(@RequestBody ProductListParam param){
+        if (param == null) {
+            return R.error("参数为空");
+        }
         ProductListVo result = mallSearchService.listProducts(param);
         return R.ok().put("data", result);
     }
@@ -71,7 +75,7 @@ public class IndexController {
      */
     @GetMapping("/item/{skuId}")
     public R skuItem(@PathVariable("skuId") Long skuId) throws ExecutionException, InterruptedException {
-        SkuItemVo vos = skuInfoService.item(skuId);
+        DetailVo vos = skuInfoService.item(skuId);
         return R.ok().put("data", vos);
     }
 

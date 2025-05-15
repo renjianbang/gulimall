@@ -16,8 +16,8 @@ public class Product {
     private String title;
     private Double price;
     private Date createTime;
-    private Integer tmId;
-    private String tmName;
+    private Integer tmId; // 品牌id
+    private String tmName; // 品牌名称
     private Long category1Id;
     private String category1Name;
     private Long category2Id;

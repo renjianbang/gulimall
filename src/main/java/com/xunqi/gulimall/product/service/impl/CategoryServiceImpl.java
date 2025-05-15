@@ -7,6 +7,8 @@ import com.xunqi.gulimall.product.entity.CategoryEntity;
 import com.xunqi.gulimall.product.service.CategoryService;
 import com.xunqi.gulimall.product.vo.Catelog2Vo;
 
+import com.xunqi.gulimall.product.vo.DetailCategoryViewVo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 
 import org.springframework.stereotype.Service;
@@ -16,7 +18,7 @@ import java.util.*;
 
 import java.util.stream.Collectors;
 
-
+@Slf4j
 @Service
 public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity> implements CategoryService {
 
@@ -108,6 +110,32 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
                 .collect(Collectors.toList());
 
         return levelMenus;
+    }
+
+    @Override
+    public DetailCategoryViewVo getCategoryView(Long catalogId) {
+        DetailCategoryViewVo detailCategoryViewVo = new DetailCategoryViewVo();
+        CategoryEntity byId = this.getById(catalogId);
+        if (byId == null) {
+            log.info("catalogId:{}不存在", catalogId);
+            return detailCategoryViewVo;
+        }
+        if (byId.getCatLevel() == null) {
+            log.info("catalogId:{}的分类等级不存在", catalogId);
+            return detailCategoryViewVo;
+        }
+        switch (byId.getCatLevel()) {
+            case 1:
+                detailCategoryViewVo.setCategory1Name(byId.getCategoryName());
+                break;
+            case 2:
+                detailCategoryViewVo.setCategory2Name(byId.getCategoryName());
+                break;
+            case 3:
+                detailCategoryViewVo.setCategory3Name(byId.getCategoryName());
+                break;
+        }
+        return detailCategoryViewVo;
     }
 
     private List<CategoryEntity> getParent_cid(List<CategoryEntity> selectList,Long parentCid) {

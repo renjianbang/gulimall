@@ -14,10 +14,7 @@ import com.xunqi.gulimall.product.entity.SpuInfoDescEntity;
 import com.xunqi.gulimall.product.service.*;
 
 
-import com.xunqi.gulimall.product.vo.SeckillSkuVo;
-import com.xunqi.gulimall.product.vo.SkuItemSaleAttrVo;
-import com.xunqi.gulimall.product.vo.SkuItemVo;
-import com.xunqi.gulimall.product.vo.SpuItemAttrGroupVo;
+import com.xunqi.gulimall.product.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +25,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.stream.Collectors;
 
 
 @Service("skuInfoService")
@@ -46,10 +44,70 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
     private SkuSaleAttrValueService skuSaleAttrValueService;
 
     @Resource
+    private CategoryService categoryService;
+
+    @Resource
     private ThreadPoolExecutor executor;
 
+    // 转换方法示例
+    private DetailSkuInfoVo convertToDetailSkuInfoVo(SkuInfoEntity entity) {
+        DetailSkuInfoVo vo = new DetailSkuInfoVo();
+        vo.setId(String.valueOf(entity.getSkuId()));
+        vo.setSkuName(entity.getSkuName());
+        vo.setPrice(entity.getPrice());
+        // 其他字段转换...
+        // 转换图片列表（需要确保skuImagesService已注入）
+        List<DetailSkuImageVo> imageVos = skuImagesService.getImagesBySkuId(entity.getSkuId())
+                .stream()
+                .map(this::convertToImageVo)
+                .collect(Collectors.toList());
+        vo.setSkuImageList(imageVos);
+        return vo;
+    }
+
+    // 新增图片转换方法
+    private DetailSkuImageVo convertToImageVo(SkuImagesEntity imageEntity) {
+        DetailSkuImageVo vo = new DetailSkuImageVo();
+        vo.setId(String.valueOf(imageEntity.getId()));
+        vo.setImgUrl(imageEntity.getImgUrl());
+        return vo;
+    }
+
     @Override
-    public SkuItemVo item(Long skuId) throws ExecutionException, InterruptedException {
+    public DetailVo item(Long skuId) throws ExecutionException, InterruptedException {
+        DetailVo detailVo = new DetailVo();
+
+        CompletableFuture<SkuInfoEntity> infoFuture = CompletableFuture.supplyAsync(() -> {
+            // 1.获取SKU基本信息
+            SkuInfoEntity skuInfo = getById(skuId);
+            // 转换为DetailSkuInfoVo（需要自行实现转换逻辑）
+            detailVo.setSkuInfo(convertToDetailSkuInfoVo(skuInfo));
+            return skuInfo;
+        }, executor);
+
+        CompletableFuture<Void> categoryFuture = infoFuture.thenAcceptAsync(skuInfo -> {
+                // 2.获取分类视图（需要实现分类查询服务）
+                DetailCategoryViewVo categoryView = categoryService.getCategoryView(skuInfo.getCatalogId());
+                detailVo.setCategoryView(categoryView);
+        }, executor);
+
+        CompletableFuture<Void> saleAttrFuture = infoFuture.thenAcceptAsync(skuInfo -> {
+            // 3.获取SPU销售属性组合
+            List<DetailSpuSaleAttrVo> saleAttrs = skuSaleAttrValueService
+                    .getSaleAttrsBySpuId(skuInfo.getSpuId());
+            detailVo.setSpuSaleAttrList(saleAttrs);
+        }, executor);
+
+        // 等待所有异步任务完成
+        CompletableFuture.allOf(infoFuture, categoryFuture, saleAttrFuture).get();
+
+        return detailVo;
+    }
+
+
+/*
+    @Override
+    public DetailVo item(Long skuId) throws ExecutionException, InterruptedException {
 
         SkuItemVo skuItemVo = new SkuItemVo();
 
@@ -80,10 +138,10 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
 //            List<SpuItemAttrGroupVo> attrGroupVos = attrGroupService.getAttrGroupWithAttrsBySpuId(res.getSpuId(), res.getCatalogId());
 //            skuItemVo.setGroupAttrs(attrGroupVos);
 //        }, executor);
-
-
-        // Long spuId = info.getSpuId();
-        // Long catalogId = info.getCatalogId();
+//
+//
+//         Long spuId = info.getSpuId();
+//         Long catalogId = info.getCatalogId();
 
         //2、sku的图片信息    pms_sku_images
 //        CompletableFuture<Void> imageFuture = CompletableFuture.runAsync(() -> {
@@ -91,6 +149,7 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
 //            skuItemVo.setImages(imagesEntities);
 //        }, executor);
 
+*/
 /*        CompletableFuture<Void> seckillFuture = CompletableFuture.runAsync(() -> {
             //3、远程调用查询当前sku是否参与秒杀优惠活动
             R skuSeckilInfo = seckillFeignService.getSkuSeckilInfo(skuId);
@@ -107,13 +166,19 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
                     }
                 }
             }
-        }, executor);*/
+        }, executor);*//*
+
 
 
         //等到所有任务都完成
-        CompletableFuture.allOf(saleAttrFuture,descFuture/*,baseAttrFuture,imageFuture*//*,seckillFuture*/).get();
+        CompletableFuture.allOf(saleAttrFuture,descFuture*/
+/*,baseAttrFuture,imageFuture*//*
+*/
+/*,seckillFuture*//*
+).get();
 
         return skuItemVo;
     }
+*/
 
 }
