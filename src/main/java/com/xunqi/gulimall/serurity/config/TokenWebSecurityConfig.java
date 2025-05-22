@@ -3,6 +3,8 @@ package com.xunqi.gulimall.serurity.config;
 //import com.xunqi.gulimall.serurity.filter.TokenAuthenticationFilter;
 import com.xunqi.gulimall.serurity.filter.TokenAuthenticationFilter;
 import com.xunqi.gulimall.serurity.filter.TokenLoginFilter;
+import com.xunqi.gulimall.serurity.handler.LoginFailureHandler;
+import com.xunqi.gulimall.serurity.handler.LoginSuccessHandler;
 import com.xunqi.gulimall.serurity.security.DefaultPasswordEncoder;
 import com.xunqi.gulimall.serurity.security.TokenLogoutHandler;
 import com.xunqi.gulimall.serurity.security.TokenManager;
@@ -18,6 +20,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import javax.annotation.Resource;
 
 /**
  * <p>
@@ -36,6 +40,11 @@ public class TokenWebSecurityConfig extends WebSecurityConfigurerAdapter {
     private TokenManager tokenManager;
     private DefaultPasswordEncoder defaultPasswordEncoder;
     private RedisTemplate redisTemplate;
+
+    @Resource
+    private LoginSuccessHandler loginSuccessHandler;
+    @Resource
+    private LoginFailureHandler loginFailureHandler;
 
     @Autowired
     public TokenWebSecurityConfig(UserDetailsService userDetailsService, DefaultPasswordEncoder defaultPasswordEncoder,
@@ -69,10 +78,16 @@ public class TokenWebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-                .csrf().disable()
+        http.cors() // 启用CORS支持
+//                .and().formLogin() //表单认证
+//                .loginProcessingUrl("/api/user/login")//登录请求 自定义
+//                // 设置登录验证成功或失败后的的跳转地址
+//                .successHandler(loginSuccessHandler)//认证成功处理器
+//                .failureHandler(loginFailureHandler)//认证失败处理器
+                .and().csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/api/user/passport/login").permitAll()
+                .antMatchers("/api/user/login").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .logout()

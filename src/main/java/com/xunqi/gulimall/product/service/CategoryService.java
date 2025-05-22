@@ -1,6 +1,7 @@
 package com.xunqi.gulimall.product.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.xunqi.gulimall.adminelementui.vo.SelectCategoryVo;
 import com.xunqi.gulimall.product.entity.CategoryEntity;
 import com.xunqi.gulimall.product.vo.Catelog2Vo;
 import com.xunqi.gulimall.product.vo.DetailCategoryViewVo;
@@ -22,5 +23,11 @@ public interface CategoryService extends IService<CategoryEntity> {
     List<CategoryEntity> listWithTree();
 
     DetailCategoryViewVo getCategoryView(Long catalogId);
+
+    List<SelectCategoryVo> getCategory1();
+
+    List<SelectCategoryVo> getCategory2(String category1Id);
+
+    List<SelectCategoryVo> getCategory3(String category2Id);
 }
 

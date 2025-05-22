@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import java.util.Date;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
+import java.util.List;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -71,5 +73,7 @@ public class User implements Serializable {
      */
     private Date createTime;
 
+    @TableField(exist = false)
+    private List<String> routes;
 
 }

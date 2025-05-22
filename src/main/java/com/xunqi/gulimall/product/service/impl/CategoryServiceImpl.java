@@ -1,7 +1,10 @@
 package com.xunqi.gulimall.product.service.impl;
 
 
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.xunqi.gulimall.adminelementui.vo.SelectCategoryVo;
 import com.xunqi.gulimall.product.dao.CategoryDao;
 import com.xunqi.gulimall.product.entity.CategoryEntity;
 import com.xunqi.gulimall.product.service.CategoryService;
@@ -136,6 +139,38 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
                 break;
         }
         return detailCategoryViewVo;
+    }
+
+    @Override
+    public List<SelectCategoryVo> getCategory1() {
+        return this.list(new LambdaQueryWrapper<CategoryEntity>().eq(CategoryEntity::getCatLevel, 1)).stream().map(item -> {
+            SelectCategoryVo selectCategoryVo = new SelectCategoryVo();
+            selectCategoryVo.setId(item.getCategoryId().toString());
+            selectCategoryVo.setName(item.getCategoryName());
+            return selectCategoryVo;
+        }).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<SelectCategoryVo> getCategory2(String category1Id) {
+        return this.list(new LambdaQueryWrapper<CategoryEntity>().eq(CategoryEntity::getCatLevel, 2)
+                .eq(StrUtil.isNotBlank(category1Id), CategoryEntity::getParentCid, category1Id)).stream().map(item -> {
+            SelectCategoryVo selectCategoryVo = new SelectCategoryVo();
+            selectCategoryVo.setId(item.getCategoryId().toString());
+            selectCategoryVo.setName(item.getCategoryName());
+            return selectCategoryVo;
+        }).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<SelectCategoryVo> getCategory3(String category2Id) {
+        return this.list(new LambdaQueryWrapper<CategoryEntity>().eq(CategoryEntity::getCatLevel, 3)
+                .eq(StrUtil.isNotBlank(category2Id), CategoryEntity::getParentCid, category2Id)).stream().map(item -> {
+            SelectCategoryVo selectCategoryVo = new SelectCategoryVo();
+            selectCategoryVo.setId(item.getCategoryId().toString());
+            selectCategoryVo.setName(item.getCategoryName());
+            return selectCategoryVo;
+        }).collect(Collectors.toList());
     }
 
     private List<CategoryEntity> getParent_cid(List<CategoryEntity> selectList,Long parentCid) {

@@ -1,6 +1,7 @@
 package com.xunqi.gulimall.user.service;
 
 import com.xunqi.gulimall.auth.vo.UserRegisterVo;
+import com.xunqi.gulimall.member.entity.MemberEntity;
 import com.xunqi.gulimall.user.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.xunqi.gulimall.user.vo.FindUserAddressListVo;
@@ -22,4 +23,6 @@ public interface UserService extends IService<User> {
     void saveUser(UserRegisterVo vos);
 
     List<FindUserAddressListVo> findUserAddressList();
+
+    User login(User user);
 }
